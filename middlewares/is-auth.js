@@ -14,17 +14,13 @@ module.exports = async (req, res, next) => {
 
         const token = authHeader.split(' ')[1]
 
-        const decode_token = jwt.verify(token, process.env.JWT_TOKEN)
+        const decode_token = jwt.verify(token, process.env.JWT_SECRET)
         if(!decode_token){
             throw_err('Token Tidak Valid', statusCode['401_unauthorized'])
         }
 
         const user = await User.findById(decode_token.userId)
         if(!user){
-            throw_err('Token Tidak Valid', statusCode['401_unauthorized'])
-        }
-
-        if(user.token.auth !== decode_token.auth){
             throw_err('Token Tidak Valid', statusCode['401_unauthorized'])
         }
 

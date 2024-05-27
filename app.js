@@ -13,13 +13,14 @@ const mongoose = require('mongoose')
 const openAPISpec = yamljs.load('./utils/swagger.yaml')
 
 // * PORTS
-const PORT = process.env.PORT || 8086
+const PORT = process.env.PORT || 8889
 
 // * ROUTES
 const usersRoutes = require('./routes/userRoutes')
+const authRoutes = require('./routes/authRoutes')
 
 // * APP ======================
-const app = express()  
+const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -37,8 +38,8 @@ app.use(morgan(customLogFormat))
 
 // * ROUTING SET
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openAPISpec))
+app.use(authRoutes)
 app.use('/users', usersRoutes)
-
 
 // * GLOBAL ERROR HANDLING
 app.use((err, req, res, next) => {

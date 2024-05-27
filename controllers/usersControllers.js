@@ -4,9 +4,7 @@ const bcrypt = require('bcrypt')
 const { validationResult }  = require('express-validator')
 const throw_err = require('../utils/throw-err')
 
-// * -------------------------------- routing
-
-
+// * -------------------------------- CONTROLLERS
 
 exports.check_username = async (req, res, next) => {
     try{
@@ -52,40 +50,11 @@ exports.check_username = async (req, res, next) => {
 exports.get_info_self = async(req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-            .select("username name role last_video favorites_video emergency_contact")
-            .populate({
-                path: 'last_video favorites_video',
-                select: 'title description link thumbnail_link'
-            })
-            .lean()
+            .select("username name role")
 
         if(!user){
             throw_err("Token Error, User tidak ditemukan", statusCode['404_not_found'])
         }
-
-        if(user.last_video === null){
-            user.last_video = {
-                _id: null,
-                title: null,
-                description: null,
-                link: null,
-                is_favorite: false
-            }
-        } else {
-            // check if last video is favorite
-            user.last_video.is_favorite = false
-            const last_vid_id = user.last_video._id.toString()
-            const findVidIdx = user.favorites_video.findIndex(vid => vid._id.toString() === last_vid_id)
-            if (findVidIdx !== -1) {
-                user.last_video.is_favorite = true
-            } 
-        }
-
-        for(let video of user.favorites_video) {
-            video.is_favorite = true
-        }
-
-        user.emergency_contact.no_telp = user.emergency_contact.no_telp.toString()
 
         res.status(statusCode['200_ok']).json({
             errors: false,
@@ -110,27 +79,11 @@ exports.get_info = async (req, res, next) => {
         let user = await User.findOne({
             username: req.params.username
         })
-            .select('username name role last_video favorites_video emergency_contact')
-            .populate({
-                path: 'last_video favorites_video',
-                select: 'title description link thumbnail_link'
-            })
-            .lean()
+            .select('username name role')
 
         if(!user){
             throw_err("User tidak ditemukan", statusCode['404_not_found'])
         }
-
-        if(user.last_video === null){
-            user.last_video = {
-                _id: null,
-                title: null,
-                description: null,
-                link: null
-            }
-        }
-
-        user.emergency_contact.no_telp = user.emergency_contact.no_telp.toString()
 
         if(user._id.toString() !== req.userId && req.role !== 'admin'){
             throw_err('Akun tidak punya akses', statusCode['401_unauthorized'])
@@ -184,6 +137,50 @@ exports.change_password = async (req, res, next) => {
 
     } catch (e) {
         if(!e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}
+
+
+
+
+exports.create_user = async (req, res, next) => {
+    try{
+        const err_val = validationResult(req)
+        if(!err_val.isEmpty()){
+            const err_view = err_val.array()[0].msg
+            const err = new Error('Add new user Failed - ' + err_view)
+            err.statusCode = statusCode['400_bad_request']
+            throw err
+        }
+
+        if(req.role !== 'admin') throw_err('selain Admin, tidak bisa membuat akun', statusCode['401_unauthorized'])
+
+        const username = req.body.username
+        const password = req.body.password
+        const hash_password = await bcrypt.hash(password, 16)
+        const name = req.body.name
+        const role = req.body.role
+
+        const new_user = new User({
+            username : username,
+            password : hash_password,
+            name : name,
+            role: role
+        })
+
+        await new_user.save()
+
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message: 'Success create new account'
+        })
+
+    } catch (e) {
+        console.log('error sisni')
+        if(!e.statusCode) {
             e.statusCode = statusCode['500_internal_server_error']
         }
         next(e)

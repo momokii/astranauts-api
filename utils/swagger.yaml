@@ -86,7 +86,7 @@ paths:
 # ! ------------------------ ---- ------------------------ ! #
 # ! ------------------------ AUTH ------------------------ ! #
 # ! ------------------------ ---- ------------------------ ! #
-  /login:
+  /auth/login:
     post:
       summary: Login for user 
       tags:
@@ -251,15 +251,11 @@ paths:
                   type: string
                 password:
                   type: string
-                password_confirmation:
-                  type: string
                 name:
                   type: string
-                is_by_admin:
-                  type: boolean 
-                  default: true
-                user_type:
-                  type: integer
+                role:
+                  type: string 
+                  default: user-tambang
       responses:
         '200':
           description: Success create new account
