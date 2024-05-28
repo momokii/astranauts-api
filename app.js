@@ -18,6 +18,7 @@ const PORT = process.env.PORT || 8889
 // * ROUTES
 const usersRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
+const truckRoutes = require('./routes/truckRoutes')
 
 // * APP ======================
 const app = express()
@@ -40,6 +41,7 @@ app.use(morgan(customLogFormat))
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openAPISpec))
 app.use(authRoutes)
 app.use('/users', usersRoutes)
+app.use('/trucks', truckRoutes)
 
 // * GLOBAL ERROR HANDLING
 app.use((err, req, res, next) => {

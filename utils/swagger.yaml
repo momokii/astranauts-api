@@ -16,6 +16,8 @@ tags:
     description: Authentication related operations
   - name: User
     description: User related operations
+  - name: Truck
+    description: Truck related operations
 
 components:
   securitySchemes:
@@ -160,29 +162,23 @@ paths:
           required: false
           description: Limit data per page
         - in: query
-          name: sort
-          schema:
-            type: string
-          required: false
-          description: Sorting data by (created_at_newest, created_at_oldest, login_at_newest, login_at_oldest)
-        - in: query
-          name: is_member
+          name: is_active
           schema:
             type: integer
           required: false
-          description: Get only member user and set 1 for true 
+          description: Get only active user and set 1 for true 
         - in: query
           name: search
           schema:
             type: string
           required: false
-          description: Search data by username or name
+          description: Search data by username
         - in: query
           name: user_type
           schema:
-            type: integer
+            type: string
           required: false
-          description: filter by user type (set 1 = admin || 2 = member)
+          description: filter by user type (set admin || user-tambang || user-stockpile)
       responses:
         '200':
           description: Get users data
@@ -211,22 +207,16 @@ paths:
                         items:
                           type: object
                           properties:
-                            id:
-                              type: integer
+                            _id:
+                              type: string
                             username:
                               type: string
                             name:
                               type: string
-                            user_type:
-                              type: integer
-                            is_member:
-                              type: integer
-                            created_at:
+                            role:
                               type: string
-                            edited_at:
-                              type: string
-                            last_login:
-                              type: string
+                            is_active:
+                              type: boolean
         '401':
           $ref: '#/components/schemas/AccountNotHaveAccess'
         '400':
@@ -235,7 +225,7 @@ paths:
           $ref: '#/components/schemas/InternalServerError'
 
     post:
-      summary: Create new user by admin (is_by_admin = true & user_type = 1 for admin || 2 for normal user)
+      summary: Create new user by admin (role value = user-tambang || user-stockpile || admin)
       tags:
         - User
       security:
@@ -291,7 +281,7 @@ paths:
 
   /users/self:
     get:
-      summary: Get user data self info
+      summary: Get user data self info 
       tags:
         - User
       security:
@@ -313,62 +303,16 @@ paths:
                   data: 
                     type: object
                     properties:
-                      id:
-                        type: integer 
+                      _id:
+                        type: string 
                       username:
                         type: string
                       name:
                         type: string
-                      user_type:
-                        type: integer 
-                      is_member:
-                        type: integer
-                      created_at:
-                        type: string
-                      edited_at:
-                        type: string
-                      last_login:
-                        type: string
-                      membership_history:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                            user_id:
-                              type: integer
-                            start_date:
-                              type: string
-                            end_date:
-                              type: string
-                            is_active:
-                              type: integer 
-                            terminated_type:
-                              type: integer
-                            terminated_date:
-                              type: string
-                      links_data:
-                        type: array
-                        items:
-                          type: object 
-                          properties:
-                            id:
-                              type: integer
-                            short_url:
-                              type: string
-                            long_url:
-                              type: string
-                            created_at:
-                              type: string
-                            expired_at:
-                              type: string
-                            is_active:
-                              type: integer
-                            total_visited:
-                              type: integer
-                            last_visited:
-                              type: string
+                      role:
+                        type: string 
+                      is_active: 
+                        type: boolean
         '401':
           $ref: '#/components/schemas/AccountNotHaveAccess'
         '404':
@@ -377,7 +321,7 @@ paths:
           $ref: '#/components/schemas/InternalServerError'
 
     patch:
-      summary: Edit user info
+      summary: Edit user info (not implemented)
       tags:
         - User
       security:
@@ -418,7 +362,7 @@ paths:
 
   /users/self/password:  
     patch:
-      summary: Edit user password (self)
+      summary: Edit user password (self) 
       tags:
         - User
       security:
@@ -434,9 +378,6 @@ paths:
                   type: string
                 new_password:
                   type: string
-                is_edit_info:
-                  type: boolean
-                  default: false
       responses:
         '200':
           description: success change user password
@@ -492,95 +433,16 @@ paths:
                   data: 
                     type: object
                     properties:
-                      id:
-                        type: integer 
-                      username:
-                        type: string
-                      name:
-                        type: string
-                      user_type:
-                        type: integer 
-                      is_member:
-                        type: integer
-                      created_at:
-                        type: string
-                      edited_at:
-                        type: string
-                      last_login:
-                        type: string
-                      membership_history:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                            user_id:
-                              type: integer
-                            start_date:
-                              type: string
-                            end_date:
-                              type: string
-                            is_active:
-                              type: integer 
-                            terminated_type:
-                              type: integer
-                            terminated_date:
-                              type: string
-        '401':
-          $ref: '#/components/schemas/AccountNotHaveAccess'
-        '404':
-          $ref: '#/components/schemas/DataNotFound'
-        '500':
-          $ref: '#/components/schemas/InternalServerError'
-
-
-
-
-
-  /users/members:
-    post:
-      summary: Create new member data (by admin or user itself)
-      tags:
-        - User
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: false
-        description: if req from user role, just send {} body req
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                is_admin:
-                  type: integer
-                user_id:
-                  type: integer
-      responses:
-        '200':
-          description: Success request
-          content:  
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                  data: 
-                    type: object
-                    properties:
-                      username:
+                      _id:
                         type: string 
+                      username:
+                        type: string
                       name:
                         type: string
-                      created_at:
-                        type: string
-        '400':
-          $ref: '#/components/schemas/DataInputNotValid'
+                      role:
+                        type: string 
+                      is_active:
+                        type: boolean
         '401':
           $ref: '#/components/schemas/AccountNotHaveAccess'
         '404':
@@ -591,6 +453,8 @@ paths:
 
 
 
+
+  
   /users/check-username:
     get:
       summary: check username availability for user
@@ -631,3 +495,235 @@ paths:
           $ref: '#/components/schemas/InternalServerError'
 
 
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ TRUCKS ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /trucks:
+    get:
+      summary: Get data trucks (admin only)
+      tags:
+        - Truck
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_active
+          schema:
+            type: string
+          required: false
+          description: Get only active truck and set true or false
+      responses:
+        '200':
+          description: Get users data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      users: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            weight_capacity:
+                              type: integer
+                            volume_capacity:
+                              type: integer
+                            is_active:
+                              type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new truck data by admin 
+      tags:
+        - Truck
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success create new adata
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit truck data by admin 
+      tags:
+        - Truck
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /trucks/{id}:
+    get:
+      summary: Get data trucks (admin only)
+      tags:
+        - Truck
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Page number
+      responses:
+        '200':
+          description: Get one truck data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      weight_capacity:
+                        type: integer
+                      volume_capacity:
+                        type: integer
+                      is_active:
+                        type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /trucks/availability:
+    patch:
+      summary: edit truck is_active status data by admin 
+      tags:
+        - Truck
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'

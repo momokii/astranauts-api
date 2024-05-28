@@ -12,7 +12,7 @@ exports.check_username = async (req, res, next) => {
         const username_check = req.query.username
         const response = {
             errors: false,
-            message: 'Info ketersediaan username',
+            message: 'Info username availability',
             data: {
                 username: username_check,
                 availability: username_avail
@@ -47,10 +47,57 @@ exports.check_username = async (req, res, next) => {
 
 
 
+exports.get_info_users = async(req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) || 1 
+        const size = parseInt(req.query.per_page) || 10
+        const offset = (page - 1) * size 
+        const search = req.query.search || ''
+        const user_type = req.query.user_type || ''
+
+        const total_user = await User.find({
+            username: { $regex: search, $options: 'i' },
+            role: { $regex: user_type, $options: 'i' }
+            }).countDocuments()
+        const user = await User.find({
+            username: { $regex: search, $options: 'i' },
+            role: { $regex: user_type, $options: 'i' }
+            })
+            .select("username name role is_active")
+            .skip(offset)
+            .limit(size)
+
+        if(!user){
+            throw_err("Token Error, User tidak ditemukan", statusCode['404_not_found'])
+        }
+
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message : "Info user detail",
+            data: {
+                page: page,
+                per_page: size,
+                total_data: total_user,
+                users: user
+            }
+        })
+
+    } catch (e) {
+        if(e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}
+
+
+
+
+
 exports.get_info_self = async(req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-            .select("username name role")
+            .select("username name role is_active")
 
         if(!user){
             throw_err("Token Error, User tidak ditemukan", statusCode['404_not_found'])
@@ -79,14 +126,10 @@ exports.get_info = async (req, res, next) => {
         let user = await User.findOne({
             username: req.params.username
         })
-            .select('username name role')
+            .select('username name role is_active')
 
         if(!user){
             throw_err("User tidak ditemukan", statusCode['404_not_found'])
-        }
-
-        if(user._id.toString() !== req.userId && req.role !== 'admin'){
-            throw_err('Akun tidak punya akses', statusCode['401_unauthorized'])
         }
 
         res.status(statusCode['200_ok']).json({
@@ -120,7 +163,7 @@ exports.change_password = async (req, res, next) => {
             throw_err('Token tidak valid/ User tidak punya akses', statusCode['401_unauthorized'])
         }
 
-        const compare_oldpass = await bcrypt.compare(req.body.password, user.password)
+        const compare_oldpass = await bcrypt.compare(req.body.password_now, user.password)
         if(!compare_oldpass){
             throw_err("Password lama tidak sesuai dengan password akun", statusCode['400_bad_request'])
         }
@@ -156,8 +199,6 @@ exports.create_user = async (req, res, next) => {
             throw err
         }
 
-        if(req.role !== 'admin') throw_err('selain Admin, tidak bisa membuat akun', statusCode['401_unauthorized'])
-
         const username = req.body.username
         const password = req.body.password
         const hash_password = await bcrypt.hash(password, 16)
@@ -179,7 +220,6 @@ exports.create_user = async (req, res, next) => {
         })
 
     } catch (e) {
-        console.log('error sisni')
         if(!e.statusCode) {
             e.statusCode = statusCode['500_internal_server_error']
         }

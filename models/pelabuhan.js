@@ -1,35 +1,34 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    password: {
+const PelabuhanSchema = new Schema({
+    nama_pelabuhan: {
         type: String,
         required: true
     },
-    name:  {
+    lokasi: {
         type: String,
         required: true
     },
-    role: {
+    longitude: {
         type: String,
-        required: true,
-        enum: ['user-tambang', 'user-stockpile', 'admin'],
-        default: 'user-tambang'
+        required: true
+    },
+    latitude: {
+        type: String,
+        required: true
+    },
+    jumlah_layer: {
+        type: Number,
+        required: true
     },
     is_active: {
         type: Boolean,
         required: true,
         default: true
     }
-},
-    {
+    }, {
         timestamps: true
     })
 
-
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('Pelabuhan', PelabuhanSchema)
