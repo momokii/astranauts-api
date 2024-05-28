@@ -18,6 +18,12 @@ tags:
     description: User related operations
   - name: Truck
     description: Truck related operations
+  - name: Tambang
+    description: Tambang related operations
+  - name: Stockpiles
+    description: Stockpile related operations
+  - name: Pelabuhan
+    description: Pelabuhan related operations
 
 components:
   securitySchemes:
@@ -697,6 +703,708 @@ paths:
       summary: edit truck is_active status data by admin 
       tags:
         - Truck
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ TAMBANG ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /tambang:
+    get:
+      summary: Get data tambang (admin only)
+      tags:
+        - Tambang
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_active
+          schema:
+            type: string
+          required: false
+          description: Get only active tambang and set true or false
+      responses:
+        '200':
+          description: Get users data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      users: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            weight_capacity:
+                              type: integer
+                            volume_capacity:
+                              type: integer
+                            is_active:
+                              type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new tambang data by admin 
+      tags:
+        - Tambang
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success create new data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit tambang data by admin 
+      tags:
+        - Tambang
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /tambang/{id}:
+    get:
+      summary: Get data tambang (admin only)
+      tags:
+        - Tambang
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Page number
+      responses:
+        '200':
+          description: Get one tambang data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      weight_capacity:
+                        type: integer
+                      volume_capacity:
+                        type: integer
+                      is_active:
+                        type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /tambang/availability:
+    patch:
+      summary: edit tambang is_active status data by admin 
+      tags:
+        - Tambang
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ STOCKPILES ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /stockpiles:
+    get:
+      summary: Get data stockpiles (admin only)
+      tags:
+        - Stockpiles
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_active
+          schema:
+            type: string
+          required: false
+          description: Get only active stockpiles and set true or false
+      responses:
+        '200':
+          description: Get stockpiles data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      users: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            weight_capacity:
+                              type: integer
+                            volume_capacity:
+                              type: integer
+                            is_active:
+                              type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new stockpiles data by admin 
+      tags:
+        - Stockpiles
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success create new data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit stockpiles data by admin 
+      tags:
+        - Stockpiles
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /stockpiles/{id}:
+    get:
+      summary: Get data stockpiles (admin only)
+      tags:
+        - Stockpiles
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Page number
+      responses:
+        '200':
+          description: Get one stockpiles data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get users data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      weight_capacity:
+                        type: integer
+                      volume_capacity:
+                        type: integer
+                      is_active:
+                        type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /stockpiles/availability:
+    patch:
+      summary: edit stockpiles is_active status data by admin 
+      tags:
+        - Stockpiles
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ PELABUHAN ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /pelabuhan:
+    get:
+      summary: Get data pelabuhan (admin only)
+      tags:
+        - Pelabuhan
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_active
+          schema:
+            type: string
+          required: false
+          description: Get only active pelabuhan and set true or false
+      responses:
+        '200':
+          description: Get pelabuhan data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get pelabuhan data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      users: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            weight_capacity:
+                              type: integer
+                            volume_capacity:
+                              type: integer
+                            is_active:
+                              type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new pelabuhan data by admin 
+      tags:
+        - Pelabuhan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success create new data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit pelabuhan data by admin 
+      tags:
+        - Pelabuhan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_truck:
+                  type: string
+                weight_capacity:
+                  type: number
+                volume_capacity:
+                  type: number
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /pelabuhan/{id}:
+    get:
+      summary: Get data pelabuhan (admin only)
+      tags:
+        - Pelabuhan
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Page number
+      responses:
+        '200':
+          description: Get one pelabuhan data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get pelabuhan data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      weight_capacity:
+                        type: integer
+                      volume_capacity:
+                        type: integer
+                      is_active:
+                        type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /pelabuhan/availability:
+    patch:
+      summary: edit pelabuhan is_active status data by admin 
+      tags:
+        - Pelabuhan
       security:
         - bearerAuth: []
       requestBody:

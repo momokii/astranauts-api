@@ -19,6 +19,9 @@ const PORT = process.env.PORT || 8889
 const usersRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
 const truckRoutes = require('./routes/truckRoutes')
+const stockpileRoutes = require('./routes/stockpileRoutes')
+const tambangRoutes = require('./routes/tambangRoutes')
+const pelabuhanRoutes = require('./routes/pelabuhanRoutes')
 
 // * APP ======================
 const app = express()
@@ -42,6 +45,10 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openAPISpec))
 app.use(authRoutes)
 app.use('/users', usersRoutes)
 app.use('/trucks', truckRoutes)
+app.use('/tambang', tambangRoutes)
+app.use('/stockpiles', stockpileRoutes)
+app.use('/pelabuhan', pelabuhanRoutes)
+
 
 // * GLOBAL ERROR HANDLING
 app.use((err, req, res, next) => {
