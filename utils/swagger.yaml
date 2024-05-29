@@ -8,6 +8,8 @@ info:
     url: https://kelanach.cyclic.app/
     email: mail@gmail.com
 servers:
+  - url: https://astranauts-api.onrender.com/
+    description: Render Deployment Server
   - url: http://localhost:8889
     description: Node Local Server
 
