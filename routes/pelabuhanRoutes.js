@@ -5,7 +5,7 @@ const pelabuhanController = require('../controllers/pelabuhanControllers')
 
 // * -------------------------------- routing
 
-router.get('/', is_auth, is_admin, pelabuhanController.get_info_one_pelabuhan)
+router.get('/', is_auth, is_admin, pelabuhanController.get_info_pelabuhan)
 
 router.get('/:id', is_auth, is_admin, pelabuhanController.get_info_one_pelabuhan)
 

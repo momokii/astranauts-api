@@ -18,10 +18,6 @@ const StockpileSchema = new Schema({
         type: String,
         required: true
     },
-    jumlah_layer: {
-        type: Number,
-        required: true
-    },
     is_active: {
         type: Boolean,
         required: true,

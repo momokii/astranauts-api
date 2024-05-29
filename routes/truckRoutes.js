@@ -2,7 +2,6 @@ const router = require('express').Router()
 const is_auth = require('../middlewares/is-auth')
 const is_admin = require('../middlewares/role-checking').is_admin
 const truckController = require('../controllers/truckControllers')
-// const throw_err = require('../utils/throw-err')
 
 
 // * -------------------------------- routing

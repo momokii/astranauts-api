@@ -144,13 +144,8 @@ exports.change_truck_availability = async (req, res, next) => {
         const truck = await Truck.findById(id_truck)
         if(!truck) throw_err("Truck not found", statusCode['404_not_found'])
 
-        console.log(truck.is_active)
-
         if(truck.is_active) truck.is_active = false
         else truck.is_active = true
-
-        console.log(truck.is_active)
-
 
         await truck.save()
 

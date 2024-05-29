@@ -535,7 +535,7 @@ paths:
           description: Get only active truck and set true or false
       responses:
         '200':
-          description: Get users data
+          description: Get trucks data
           content:  
             application/json:
               schema:
@@ -679,7 +679,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: get users data
+                    example: get truck data
                   data: 
                     type: object
                     properties:
@@ -767,9 +767,15 @@ paths:
             type: string
           required: false
           description: Get only active tambang and set true or false
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+          description: Search data tambang by lokasi/ nama_tambang
       responses:
         '200':
-          description: Get users data
+          description: Get tambang data
           content:  
             application/json:
               schema:
@@ -780,7 +786,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: get users data
+                    example: get tambang data
                   data: 
                     type: object
                     properties:
@@ -797,9 +803,15 @@ paths:
                           properties:
                             _id:
                               type: string
-                            weight_capacity:
-                              type: integer
-                            volume_capacity:
+                            nama_tambang:
+                              type: string
+                            lokasi:
+                              type: string
+                            longitude:
+                              type: string
+                            latitude:
+                              type: string
+                            jumlah_layer:
                               type: integer
                             is_active:
                               type: boolean
@@ -823,9 +835,15 @@ paths:
             schema:
               type: object
               properties:
-                weight_capacity:
-                  type: number
-                volume_capacity:
+                nama_tambang:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
+                jumlah_layer:
                   type: number
       responses:
         '200':
@@ -860,11 +878,17 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_tambang:
                   type: string
-                weight_capacity:
-                  type: number
-                volume_capacity:
+                nama_tambang:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
+                jumlah_layer:
                   type: number
       responses:
         '200':
@@ -913,16 +937,22 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: get users data
+                    example: get tambang data
                   data: 
                     type: object
                     properties:
                       _id:
                         type: string
-                      weight_capacity:
-                        type: integer
-                      volume_capacity:
-                        type: integer
+                      nama_tambang:
+                        type: string
+                      lokasi:
+                        type: string
+                      longitude:
+                        type: string
+                      latitude:
+                        type: string
+                      jumlah_layer:
+                        type: number
                       is_active:
                         type: boolean
         '401':
@@ -946,7 +976,7 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_tambang:
                   type: string
       responses:
         '200':
@@ -1001,6 +1031,12 @@ paths:
             type: string
           required: false
           description: Get only active stockpiles and set true or false
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+          description: Search data stockpile by lokasi/ nama_stockpile
       responses:
         '200':
           description: Get stockpiles data
@@ -1031,12 +1067,22 @@ paths:
                           properties:
                             _id:
                               type: string
-                            weight_capacity:
+                            nama_stockpile:
+                              type: string
+                            lokasi:
+                              type: string
+                            longitude:
+                              type: string
+                            latitude:
+                              type: string
+                            total_capacity:
                               type: integer
-                            volume_capacity:
+                            max_capacity:
                               type: integer
                             is_active:
                               type: boolean
+                            coal_id:
+                              type: array
         '401':
           $ref: '#/components/schemas/AccountNotHaveAccess'
         '400':
@@ -1057,9 +1103,17 @@ paths:
             schema:
               type: object
               properties:
-                weight_capacity:
+                nama_stockpile:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
+                total_capacity:
                   type: number
-                volume_capacity:
+                max_capacity:
                   type: number
       responses:
         '200':
@@ -1094,12 +1148,20 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_stockpile:
                   type: string
-                weight_capacity:
-                  type: number
-                volume_capacity:
-                  type: number
+                nama_stockpile:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
+                total_capacity:
+                  type: integer
+                max_capacity:
+                  type: integer
       responses:
         '200':
           description: Success edit data
@@ -1147,18 +1209,28 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: get users data
+                    example: get stockpile data
                   data: 
                     type: object
                     properties:
                       _id:
                         type: string
-                      weight_capacity:
+                      nama_stockpile:
+                        type: string
+                      lokasi:
+                        type: string
+                      longitude:
+                        type: string
+                      latitude:
+                        type: string
+                      total_capacity:
                         type: integer
-                      volume_capacity:
+                      max_capacity:
                         type: integer
                       is_active:
                         type: boolean
+                      coal_id:
+                        type: array
         '401':
           $ref: '#/components/schemas/AccountNotHaveAccess'
         '400':
@@ -1180,7 +1252,7 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_stockpile:
                   type: string
       responses:
         '200':
@@ -1235,6 +1307,12 @@ paths:
             type: string
           required: false
           description: Get only active pelabuhan and set true or false
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+          description: Search data stockpile by lokasi/ nama_pelabuhan
       responses:
         '200':
           description: Get pelabuhan data
@@ -1265,10 +1343,14 @@ paths:
                           properties:
                             _id:
                               type: string
-                            weight_capacity:
-                              type: integer
-                            volume_capacity:
-                              type: integer
+                            nama_pelabuhan:
+                              type: string
+                            lokasi:
+                              type: string
+                            longitude:
+                              type: string
+                            latitude:
+                              type: string
                             is_active:
                               type: boolean
         '401':
@@ -1291,10 +1373,14 @@ paths:
             schema:
               type: object
               properties:
-                weight_capacity:
-                  type: number
-                volume_capacity:
-                  type: number
+                nama_pelabuhan:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
       responses:
         '200':
           description: Success create new data
@@ -1328,12 +1414,16 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_pelabuhan:
                   type: string
-                weight_capacity:
-                  type: number
-                volume_capacity:
-                  type: number
+                nama_pelabuhan:
+                  type: string
+                lokasi:
+                  type: string
+                longitude:
+                  type: string
+                latitude:
+                  type: string
       responses:
         '200':
           description: Success edit data
@@ -1387,10 +1477,14 @@ paths:
                     properties:
                       _id:
                         type: string
-                      weight_capacity:
-                        type: integer
-                      volume_capacity:
-                        type: integer
+                      nama_pelabuhan:
+                        type: string
+                      lokasi:
+                        type: string
+                      longitude:
+                        type: string
+                      latitude:
+                        type: string
                       is_active:
                         type: boolean
         '401':
@@ -1414,7 +1508,7 @@ paths:
             schema:
               type: object
               properties:
-                id_truck:
+                id_pelabuhan:
                   type: string
       responses:
         '200':
