@@ -5,6 +5,7 @@ const throw_err = require('../utils/throw-err')
 // * -------------------------------- CONTROLLERS
 
 exports.get_info_stockpile = async (req, res, next) => {
+    // TODO add filter if untuk check apakah ada coal pada tiap data stockpile jika ada maka search pada data coal --> harus lakukan manual untuk hal ini
     try{
         const page = parseInt(req.query.page) || 1 
         const size = parseInt(req.query.per_page) || 10
@@ -78,6 +79,8 @@ exports.get_info_stockpile = async (req, res, next) => {
 
 
 exports.get_info_one_stockpile = async (req, res, next) => {
+    // TODO add filter if untuk check apakah ada coal pada tiap data stockpile jika ada maka search pada data coal --> harus lakukan manual untuk hal ini
+
     try{
         const id_stockpile = req.params.id
 

@@ -22,6 +22,8 @@ const truckRoutes = require('./routes/truckRoutes')
 const stockpileRoutes = require('./routes/stockpileRoutes')
 const tambangRoutes = require('./routes/tambangRoutes')
 const pelabuhanRoutes = require('./routes/pelabuhanRoutes')
+const activityRoutes = require('./routes/activityRoutes')
+const coalRoutes = require('./routes/coalRoutes')
 
 // * APP ======================
 const app = express()
@@ -48,6 +50,8 @@ app.use('/trucks', truckRoutes)
 app.use('/tambang', tambangRoutes)
 app.use('/stockpiles', stockpileRoutes)
 app.use('/pelabuhan', pelabuhanRoutes)
+app.use('/activities', activityRoutes)
+app.use('/coals', coalRoutes)
 
 
 // * GLOBAL ERROR HANDLING

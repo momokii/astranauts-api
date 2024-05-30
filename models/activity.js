@@ -2,12 +2,14 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ActivitySchema = new Schema({
-    nik_spv: {
-        type: String,
-        required: true
+    created_by: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     },
     id_tambang: {
         type: Schema.Types.ObjectId,
+        required: true,
         ref: 'Tambang'
     },
     layer: {
@@ -25,7 +27,12 @@ const ActivitySchema = new Schema({
     },
     waktu_selesai: {
         type: Date,
-        required: true
+        default: null
+    },
+    is_deleted: {
+        type: Boolean,
+        required: true,
+        default: false
     }
     }, {
         timestamps: true

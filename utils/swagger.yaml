@@ -26,6 +26,10 @@ tags:
     description: Stockpile related operations
   - name: Pelabuhan
     description: Pelabuhan related operations
+  - name: Activities
+    description: Activity related operations
+  - name: Coals
+    description: Coal related operations
 
 components:
   securitySchemes:
@@ -133,10 +137,7 @@ paths:
                         type: string 
                       token_type:
                         type: string
-                        example: JWT 
-                      expires_in:
-                        type: integer
-                        example: 3600
+                        example: JWT
         '400':
           $ref: '#/components/schemas/DataInputNotValid'
         '500':
@@ -558,7 +559,7 @@ paths:
                         type: integer
                       total_data:
                         type: integer
-                      users: 
+                      truck: 
                         type: array
                         items:
                           type: object
@@ -798,7 +799,7 @@ paths:
                         type: integer
                       total_data:
                         type: integer
-                      users: 
+                      tambang: 
                         type: array
                         items:
                           type: object
@@ -1062,7 +1063,7 @@ paths:
                         type: integer
                       total_data:
                         type: integer
-                      users: 
+                      stockpile: 
                         type: array
                         items:
                           type: object
@@ -1338,7 +1339,7 @@ paths:
                         type: integer
                       total_data:
                         type: integer
-                      users: 
+                      pelabuhan: 
                         type: array
                         items:
                           type: object
@@ -1511,6 +1512,683 @@ paths:
               type: object
               properties:
                 id_pelabuhan:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ ACTIVITIES ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /activities:
+    get:
+      summary: Get data activities (admin and user-tambang)
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_active
+          schema:
+            type: string
+          required: false
+          description: Get only active activities and set true or false
+        - in: query
+          name: is_deleted
+          schema:
+            type: string
+          required: false
+          description: Get Only deleted activities and set true
+      responses:
+        '200':
+          description: Get activities data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get activities data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      activity: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            layer:
+                              type: integer
+                            waktu_mulai:
+                              type: string
+                            waktu_selesai:
+                              type: string
+                            is_active:
+                              type: boolean
+                            created_by:
+                              type: object
+                              properties:
+                                _id:
+                                  type: string
+                                username:
+                                  type: string
+                                name:
+                                  type: string
+                            tambang:
+                              type: object
+                              properties:
+                                _id:
+                                  type: string
+                                nama_tambang:
+                                  type: string
+                                lokasi:
+                                  type: string
+                                longitude:
+                                  type: string
+                                latitude:
+                                  type: string
+                                jumlah_layer:
+                                  type: integer
+                                is_active:
+                                  type: boolean
+                                is_deleted:
+                                  type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new activities data by user-tambang 
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_tambang:
+                  type: string
+                layer:
+                  type: integer
+      responses:
+        '200':
+          description: Success create new data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit activities data by user-tambang 
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_activity:
+                  type: string
+                id_tambang: 
+                  type: string
+                layer:
+                  type: integer
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /activities/{id}:
+    get:
+      summary: Get data activities (admin and user-tambang)
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID activities
+      responses:
+        '200':
+          description: Get one activities data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get activities data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      layer:
+                        type: integer
+                      waktu_mulai:
+                        type: string
+                      waktu_selesai:
+                        type: string
+                      is_active:
+                        type: boolean
+                      created_by:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                          username:
+                            type: string
+                          name:
+                            type: string
+                      tambang:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                          nama_tambang:
+                            type: string
+                          lokasi:
+                            type: string
+                          longitude:
+                            type: string
+                          latitude:
+                            type: string
+                          jumlah_layer:
+                            type: integer
+                          is_active:
+                            type: boolean
+                          is_deleted:
+                            type: boolean
+                      coal_data:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                _id:
+                                  type: string 
+                                activity_id:
+                                  type: string
+                                cal_value:
+                                  type: string
+                                ash_cont:
+                                  type: string
+                                moist_cont:
+                                  type: string
+                                sulph_cont:
+                                  type: string
+                                fc_vm:
+                                  type: string
+                                is_deleted: 
+                                  type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /activities/active:
+    patch:
+      summary: edit activities is_active status data by user-tambang 
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_activity:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /activities/delete:
+    patch:
+      summary: soft delete activities status data by user-tambang 
+      tags:
+        - Activities
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_activity:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+
+
+
+
+# ! ------------------------ ---- ------------------------ ! #
+# ! ------------------------ COAL ------------------------ ! #
+# ! ------------------------ ---- ------------------------ ! #
+  /coals:
+    get:
+      summary: Get data coals (admin and user-tambang)
+      tags:
+        - Coals
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+          required: false
+          description: Limit data per page
+        - in: query
+          name: is_deleted
+          schema:
+            type: string
+          required: false
+          description: Get Only deleted coals and set true
+      responses:
+        '200':
+          description: Get coals data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get coals data
+                  data: 
+                    type: object
+                    properties:
+                      page:
+                        type: integer 
+                      per_page:
+                        type: integer
+                      total_data:
+                        type: integer
+                      coal: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id:
+                              type: string
+                            cal_value:
+                              type: string
+                            ash_cont:
+                              type: string
+                            moist_cont:
+                              type: string
+                            sulph_cont:
+                              type: string
+                            fc_vm:
+                              type: string
+                            is_deleted:
+                              type: boolean
+                            activity:
+                              type: object
+                              properties:
+                                _id:
+                                  type: string
+                                created_by:
+                                  type: string
+                                id_tambang:
+                                  type: string
+                                layer:
+                                  type: string
+                                waktu_mulai:
+                                  type: string
+                                waktu_selesai:
+                                  type: integer
+                                is_active:
+                                  type: boolean
+                                is_deleted:
+                                  type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      summary: Create new coals data by user-tambang 
+      tags:
+        - Coals
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activity_id:
+                  type: string
+                cal_value:
+                  type: string
+                ash_cont:
+                  type: string
+                moist_cont:
+                  type: string
+                sulph_cont:
+                  type: string
+                fc_vm:
+                  type: string
+      responses:
+        '200':
+          description: Success create new data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+    patch:
+      summary: edit coals data by user-tambang 
+      tags:
+        - Coals
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_coal:
+                  type: string
+                activity_id:
+                  type: string
+                cal_value:
+                  type: string
+                ash_cont:
+                  type: string
+                moist_cont:
+                  type: string
+                sulph_cont:
+                  type: string
+                fc_vm:
+                  type: string
+      responses:
+        '200':
+          description: Success edit data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /coals/{id}:
+    get:
+      summary: Get data coals (admin and user-tambang)
+      tags:
+        - Coals
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID coals
+      responses:
+        '200':
+          description: Get one coals data
+          content:  
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: get coals data
+                  data: 
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      cal_value:
+                        type: string
+                      ash_cont:
+                        type: string
+                      moist_cont:
+                        type: string
+                      sulph_cont:
+                        type: string
+                      fc_vm:
+                        type: string
+                      activity:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                          created_by:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              username:
+                                type: string
+                              name:
+                                type: string
+                          layer:
+                            type: integer
+                          waktu_mulai:
+                            type: string
+                          waktu_Selesai:
+                            type: string
+                          is_active:
+                            type: boolean
+                          is_deleted:
+                            type: boolean
+                          tambang:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              nama_tambang:
+                                type: string
+                              lokasi:
+                                type: string
+                              longitude:
+                                type: string
+                              latitude:
+                                type: string
+                              jumlah_layer:
+                                type: integer
+                              is_active:
+                                type: boolean
+        '401':
+          $ref: '#/components/schemas/AccountNotHaveAccess'
+        '400':
+          $ref: '#/components/schemas/DataInputNotValid'
+        '500':
+          $ref: '#/components/schemas/InternalServerError'
+
+  /coals/delete:
+    patch:
+      summary: soft delete coals status data by user-tambang 
+      tags:
+        - Coals
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_activity:
                   type: string
       responses:
         '200':

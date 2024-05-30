@@ -42,7 +42,7 @@ exports.get_info_trucks = async (req, res, next) => {
                 page: page,
                 per_page: size,
                 total_data: total_truck,
-                users: truck
+                truck: truck
             }
         })
 

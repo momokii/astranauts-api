@@ -7,9 +7,9 @@ const truckController = require('../controllers/truckControllers')
 // * -------------------------------- routing
 
 
-router.get('/', is_auth, is_admin, truckController.get_info_trucks)
+router.get('/', is_auth, truckController.get_info_trucks)
 
-router.get('/:id', is_auth, is_admin, truckController.get_info_one_truck)
+router.get('/:id', is_auth, truckController.get_info_one_truck)
 
 router.post('/', is_auth, is_admin, truckController.create_truck)
 

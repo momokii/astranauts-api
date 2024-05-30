@@ -57,6 +57,7 @@ exports.get_info_users = async(req, res, next) => {
 
         const total_user = await User.find({
             username: { $regex: search, $options: 'i' },
+            
             role: { $regex: user_type, $options: 'i' }
             }).countDocuments()
         const user = await User.find({

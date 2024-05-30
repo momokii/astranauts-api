@@ -5,9 +5,9 @@ const tambangController = require('../controllers/tambangControllers')
 
 // * -------------------------------- routing
 
-router.get('/', is_auth, is_admin, tambangController.get_info_tambang)
+router.get('/', is_auth, tambangController.get_info_tambang)
 
-router.get('/:id', is_auth, is_admin, tambangController.get_info_one_tambang)
+router.get('/:id', is_auth, tambangController.get_info_one_tambang)
 
 router.post('/', is_auth, is_admin, tambangController.create_tambang)
 

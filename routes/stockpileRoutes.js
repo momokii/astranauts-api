@@ -5,9 +5,9 @@ const stockpileController = require('../controllers/stockpileControllers')
 
 // * -------------------------------- routing
 
-router.get('/', is_auth, is_admin, stockpileController.get_info_stockpile)
+router.get('/', is_auth, stockpileController.get_info_stockpile)
 
-router.get('/:id', is_auth, is_admin, stockpileController.get_info_one_stockpile)
+router.get('/:id', is_auth, stockpileController.get_info_one_stockpile)
 
 router.post('/', is_auth, is_admin, stockpileController.create_stockpile)
 

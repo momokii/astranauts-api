@@ -48,3 +48,19 @@ exports.is_user_stockpile = async (req, res, next) => {
         next(e)
     }
 }
+
+
+exports.except_user_stockpile = async (req, res, next) => {
+    try {
+        if(req.role === 'user-stockpile') throw_err('You are not authorized ( user-stockpile)', statusCode['401_unauthorized'])
+        
+        next()
+
+    } catch(e) {
+        if(!e.statusCode) {
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+
+        next(e)
+    }
+}

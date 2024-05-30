@@ -25,6 +25,11 @@ const CoalSchema = new Schema({
     fc_vm : {
         type: String,
         required: true
+    },
+    is_deleted: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 }, {
     timestamps: true
